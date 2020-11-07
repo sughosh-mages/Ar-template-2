@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
+    <script
+        src="https://cdn.jsdelivr.net/gh/aframevr/aframe@1c2407b26c61958baa93967b5412487cd94b290b/dist/aframe-master.min.js"></script>
+
+    <script src='https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js'></script>
+    <script
+        src="https://rawgit.com/nicolocarpignoli/nicolocarpignoli.github.io/master/ar-click-events/events.js"></script>
+
+    <script>
+        var tap = 0;
+
+
+
+        window.onload = function () {
+            if (window.innerHeight > window.innerWidth) {
+                alert("Please use Landscape!");
+            }
+            var bgSound = document.querySelector('[sound]');
+            AFRAME.registerComponent('videohandler', {
+
+                init: function () {
+
+                    var marker = this.el;
+                    this.vid = document.querySelector("#vid");
+                    var linkedIn_3 = document.querySelector("#linkedIn_3");
+                    var fb_5 = document.querySelector("#fb_5");
+                    var contact_6 = document.querySelector("#contact_6");
+                    bgSound.components.sound.stopSound();
+
+                    marker.addEventListener('markerFound', function () {
+                        this.vid.play();
+                        bgSound.components.sound.playSound();
+                    }.bind(this));
+
+                    marker.addEventListener('markerLost', function () {
+                        bgSound.components.sound.stopSound();
+                        this.vid.pause();
+                        this.vid.currentTime = 0;
+                    }.bind(this));
+
+                    //cta button events
+                    linkedIn_3.addEventListener("click", function (evt) {
+                        window.location = "https://www.linkedin.com/in/sughoshpandey/";
+                    });
+                    fb_5.addEventListener("click", function (evt) {
+                        window.location = "https://www.facebook.com/sughosh.pandey";
+                    });
+                    contact_6.addEventListener("click", function (evt) {
+                        window.location = "tel://8800539834";
+                    });
+
+                }
+            });
+
+            var tapBut = document.querySelector(".play-video-button");
+            tapBut.addEventListener("click", function () {
+                tap++;
+                var vid = document.querySelector("#vid");
+                if (tap % 2 != 0) {
+                    tapBut.innerHTML = "Stop Video";
+                    vid.play();
+                    bgSound.components.sound.playSound();
+                }
+                else {
+                    tapBut.innerHTML = "Play Video";
+
+                    vid.pause();
+                    vid.currentTime = 0;
+                    bgSound.components.sound.stopSound();
+                }
+            });
+        };
+
+    </script>
+
+    <style>
+        .buttons {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 5em;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .play-video-button {
+            padding: 0.25em;
+            border-radius: 4px;
+            border: none;
+            background: white;
+            color: black;
+            width: 6em;
+            height: 4em;
+        }
+    </style>
+</head>
+
+<body style='margin : 0px; overflow: hidden;'>
+
+
+    <div class="buttons">
+        <button class="play-video-button">Play Video</button>
+    </div>
+
+    <a-scene vr-mode-ui="enabled: false;" renderer='antialias: true; alpha: true; precision: mediump;' embedded
+        arjs='trackingMethod: best; sourceType: webcam; debugUIEnabled: false;'>
+        <a-entity id="mouseCursor" cursor="rayOrigin: mouse"
+            raycaster="objects: .intersectable; useWorldCoordinates: true;">
+        </a-entity>
+        <a-assets>
+            <video src="videos/mages.mp4" preload="auto" id="vid" response-type="arraybuffer" loop crossorigin
+                webkit-playsinline autoplay muted playsinline>
+            </video>
+            <audio id="mages" src="music/mages.mp3" preload="auto"></audio>
+        </a-assets>
+        <a-entity sound="src: #mages"></a-entity>
+        <a-marker id="marker" type="pattern" preset="custom" src="patt3.patt" url="patt3.patt" emitevents="true" button
+            registerevents videohandler>
+            <a-video src="#vid" position='0 0.1 0' rotation='270 0 0' width='3' height='1.5'>
+            </a-video>
+
+            <a-plane src="textures/sughoshface.png" id="face_1" class="intersectable" width="1.4" height="1.4"
+                position="-2.4 0.2 0" rotation="270 0 0" color="#FFFFFF" transparent=True>
+            </a-plane>
+
+            <a-plane src="textures/sughoshname.png" id="name_2" class="intersectable" width="1" height="0.4"
+                position="-2.4 0.3 0.8" rotation="270 0 0" color="#FFFFFF" transparent=True>
+            </a-plane>
+
+            <a-plane src="textures/linkedIn.png" emitevents="true" button id="linkedIn_3" class="intersectable"
+                width="0.6" height="0.6" position="2 0.2 -0.6" rotation="270 0 0" color="#FFFFFF" transparent=True>
+            </a-plane>
+
+            <a-plane src="textures/facebook.png" emitevents="true" button id="fb_5" class="intersectable" width="0.9"
+                height="0.6" position="2 0.2 0.1" rotation="270 0 0" color="#FFFFFF" transparent=True>
+            </a-plane>
+
+            <a-plane src="textures/call.png" emitevents="true" button id="contact_6" class="intersectable" width="0.6"
+                height="0.6" position="2 0.2 0.7" rotation="270 0 0" color="#FFFFFF" transparent=True>
+            </a-plane>
+        </a-marker>
+        <a-entity camera>
+            <a-entity cursor="fuse: false" position="0 0 -1"
+                geometry="primitive:ring; radiusInner: 0.002; radiusOuter: 0.003" material="color: white; shader: flat">
+            </a-entity>
+    </a-scene>
+</body>
+
+</html>
